@@ -10,12 +10,12 @@ from mail_client import ENDPOINT, build_base_parser, call, finish, rows
 COLUMNS = [("ID", ["folderId", "folder_id", "id"]), ("Name", ["folderName", "folder_name", "name"]), ("Count", ["count", "totalCount", "messageCount"])]
 def build_parser():
     parser = build_base_parser("List Zoho Mail folders.")
-    parser.add_argument("--account-id", required=True, help="Zoho Mail account ID")
+    parser.add_argument("--account-id", default="me", help="Zoho Mail account ID (default: me)")
     return parser
 def main(argv=None):
     args = build_parser().parse_args(argv)
     ENDPOINT.configure(args)
-    result = call("list folders", {"headers": {}, "query_params": {"account_id": args.account_id}}, timeout=args.timeout)
+    result = call("list folders", {"path_variables": {"accountId": args.account_id}}, timeout=args.timeout)
     records = rows(result) if "error" not in result else []
     return finish(result, records, args, COLUMNS, empty="No folders found.")
 if __name__ == "__main__":

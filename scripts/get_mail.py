@@ -9,14 +9,14 @@ if str(_SCRIPTS_DIR) not in sys.path:
 from mail_client import ENDPOINT, build_base_parser, call
 def build_parser():
     parser = build_base_parser("Get Zoho Mail details.")
-    parser.add_argument("--account-id", required=True)
-    parser.add_argument("--folder-id", required=True)
+    parser.add_argument("--account-id", default="me")
+    parser.add_argument("--fields", default="messageId,threadId,folderId,subject,fromAddress,toAddress,ccAddress,receivedTime,summary")
     parser.add_argument("--id", required=True, help="message ID")
     return parser
 def main(argv=None):
     args = build_parser().parse_args(argv)
     ENDPOINT.configure(args)
-    result = call("get mail", {"headers": {}, "query_params": {"account_id": args.account_id, "folder_id": args.folder_id, "id": args.id}}, timeout=args.timeout)
+    result = call("get mail", {"path_variables": {"accountId": args.account_id, "messageId": args.id}, "query_params": {"fields": args.fields}}, timeout=args.timeout)
     if "error" in result:
         print(f"Error: {result['error']}", file=sys.stderr); return 1
     print(json.dumps(result, indent=2, ensure_ascii=False)); return 0

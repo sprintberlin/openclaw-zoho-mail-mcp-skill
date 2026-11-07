@@ -57,7 +57,13 @@ def rows(result):
                     found = extract(node[key])
                     if found is not None: return found
         return None
-    found = extract(result.get("data", result)); return found if found is not None else []
+    found = extract(result.get("data", result))
+    if found is None:
+        node = result.get("data", result)
+        while isinstance(node, dict) and "primaryAccount" not in node and isinstance(node.get("data"), dict): node = node["data"]
+        if isinstance(node, dict) and isinstance(node.get("primaryAccount"), dict):
+            found = [node["primaryAccount"]] + [a for a in (node.get("secondaryAccounts") or []) if isinstance(a, dict)]
+    return found if found is not None else []
 
 def field(record, candidates, default="-"):
     if not isinstance(record, dict): return default
@@ -74,13 +80,13 @@ def field(record, candidates, default="-"):
         return str(value)
     return default
 
-def paginate(tool, headers=None, params=None, page_size=20, max_records=None, timeout=30):
+def paginate(tool, path_variables=None, params=None, page_size=20, max_records=None, timeout=30):
     collected, offset = [], 0
     while True:
         request_limit = min(page_size, max_records-len(collected)) if max_records is not None else page_size
         if request_limit <= 0: break
-        query = dict(params or {}); query.update({"offset": offset, "limit": request_limit})
-        result = call(tool, {"headers": dict(headers or {}), "query_params": query}, timeout=timeout)
+        query = dict(params or {}); query.update({"start": offset + 1, "limit": request_limit})
+        result = call(tool, {"path_variables": dict(path_variables or {}), "query_params": query}, timeout=timeout)
         if "error" in result: return result
         page = rows(result); collected.extend(page)
         if not page or len(page) < request_limit: break

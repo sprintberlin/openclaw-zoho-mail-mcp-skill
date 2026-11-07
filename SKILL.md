@@ -93,16 +93,16 @@ Never selected by any profile: Domain, User, Group, Policy, Org Management, Audi
 
 ```bash
 python3 scripts/list_accounts.py
-python3 scripts/list_folders.py --account-id ACCOUNT_ID
-python3 scripts/list_mails.py --account-id ACCOUNT_ID --folder-id FOLDER_ID --limit 20
-python3 scripts/get_mail.py --account-id ACCOUNT_ID --folder-id FOLDER_ID --id MESSAGE_ID
+python3 scripts/list_folders.py            # --account-id defaults to "me"
+python3 scripts/list_mails.py --folder-id FOLDER_ID --limit 20
+python3 scripts/get_mail.py --id MESSAGE_ID
 ```
 
 Direct call with `mcporter`:
 
 ```bash
 cat > /tmp/mail_accounts.json <<'JSON'
-{"headers": {}}
+{"query_params": {}}
 JSON
 mcporter call "$ZOHO_MAIL_MCP_URL.ZohoMail_list_accounts" --args "$(< /tmp/mail_accounts.json)"
 ```
