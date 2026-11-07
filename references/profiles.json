@@ -1,0 +1,181 @@
+{
+  "version": 1,
+  "service": "mail",
+  "catalog": "actions.jsonl",
+  "profiles": {
+    "mail-reader": {
+      "name": "Mail Reader",
+      "description": "Read-only mailbox access: accounts, folders, labels, mails, threads, attachments, search builders, filters, signatures, vacation reply, settings. No send, move, or delete.",
+      "actions": [
+        "list accounts",
+        "get account",
+        "list folders",
+        "get folder",
+        "list labels",
+        "get label",
+        "list mails",
+        "get mail",
+        "get mail headers",
+        "get mail html",
+        "get mail original",
+        "get mail thread",
+        "list mail attachments",
+        "get mail attachment",
+        "get mail inline content",
+        "build address search query",
+        "build attachment search query",
+        "build content search query",
+        "build meta search query",
+        "search mail advanced",
+        "list filters",
+        "get filter",
+        "get smart filter status",
+        "list signatures",
+        "get signature",
+        "get vacation reply",
+        "list send mail details",
+        "get compose settings",
+        "get conversation settings",
+        "get mail view settings",
+        "get system settings",
+        "get mail permalink",
+        "get reminders",
+        "get reminder"
+      ]
+    },
+    "mail-composer": {
+      "name": "Mail Composer",
+      "description": "Reader plus composing: send, reply, forward, save drafts and templates, upload compose attachments. No mailbox reorganisation.",
+      "extends": "mail-reader",
+      "actions": [
+        "send mail",
+        "reply to mail",
+        "forward mail",
+        "save mail draft",
+        "save mail template",
+        "upload mail attachment"
+      ]
+    },
+    "mail-organizer": {
+      "name": "Mail Organizer",
+      "description": "Composer plus daily mailbox work: read state, flags, labels, move, archive, pin, snooze, undo, trash and restore, folder and label create/rename/move, thread actions. Permanent deletion stays denied.",
+      "extends": "mail-composer",
+      "actions": [
+        "mark mails as read",
+        "mark mails as unread",
+        "mark mails as spam",
+        "mark mails as not spam",
+        "apply mail flag",
+        "clear mail flag",
+        "apply mail labels",
+        "remove mail labels",
+        "clear mail labels",
+        "move mails",
+        "archive mails",
+        "unarchive mails",
+        "pin mails",
+        "unpin mails",
+        "snooze mails",
+        "unsnooze mails",
+        "undo mail action",
+        "move mails to trash",
+        "restore mails from trash",
+        "create folder",
+        "update folder",
+        "move folder",
+        "mark folder as read",
+        "create label",
+        "update label",
+        "applyFlagToThreads",
+        "applyLabelToThreads",
+        "markThreadSpam",
+        "markThreadUnread",
+        "markThreadsAsNotSpam",
+        "markThreadsAsRead",
+        "moveThreads",
+        "removeAllLabelsFromThreads",
+        "removeLabelFromThreads"
+      ]
+    },
+    "mail-employee": {
+      "name": "Mail Employee",
+      "description": "Organizer plus own mailbox settings like a human employee: signatures, vacation reply, filters, reminders, compose and view settings. No admin, domain, user, policy, forwarding, or permanent-delete actions. Recommended profile for an agent with its own mailbox.",
+      "extends": "mail-organizer",
+      "actions": [
+        "create signature",
+        "update signature",
+        "create vacation reply",
+        "update vacation reply",
+        "create filter",
+        "update filter",
+        "enable filter",
+        "disable filter",
+        "run filter",
+        "create reminder",
+        "update reminder",
+        "update compose settings",
+        "update mail view settings"
+      ]
+    }
+  },
+  "tasks": {
+    "read-and-search": {
+      "name": "Read and search mail",
+      "description": "Find and read mails and attachments.",
+      "actions": [
+        "list accounts",
+        "list folders",
+        "build address search query",
+        "build content search query",
+        "build meta search query",
+        "search mail advanced",
+        "list mails",
+        "get mail",
+        "get mail thread",
+        "list mail attachments",
+        "get mail attachment"
+      ]
+    },
+    "reply-to-mail": {
+      "name": "Read and reply",
+      "description": "Read a thread, then reply or forward, with attachments if needed.",
+      "actions": [
+        "list accounts",
+        "get mail",
+        "get mail thread",
+        "upload mail attachment",
+        "reply to mail",
+        "forward mail",
+        "save mail draft"
+      ]
+    },
+    "send-new-mail": {
+      "name": "Send new mail",
+      "description": "Compose and send, optionally with attachments.",
+      "actions": [
+        "list accounts",
+        "list send mail details",
+        "upload mail attachment",
+        "save mail draft",
+        "send mail"
+      ]
+    },
+    "triage-inbox": {
+      "name": "Triage inbox",
+      "description": "Sort mails: read state, flags, labels, folders, archive, trash.",
+      "actions": [
+        "list folders",
+        "list labels",
+        "list mails",
+        "mark mails as read",
+        "mark mails as unread",
+        "apply mail flag",
+        "apply mail labels",
+        "move mails",
+        "archive mails",
+        "move mails to trash",
+        "undo mail action"
+      ]
+    }
+  }
+}

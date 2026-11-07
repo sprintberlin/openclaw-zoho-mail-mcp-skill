@@ -1,0 +1,7 @@
+{
+  "name": "zoho-mail-mcp",
+  "version": "1.0.0",
+  "description": "Connect your agent to Zoho Mail via MCP. 397-action catalog, least-privilege mailbox profiles, and mailbox helpers using mcporter.",
+  "author": "SprintCX",
+  "license": "MIT"
+}
