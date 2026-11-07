@@ -79,7 +79,7 @@ def load_profiles_data(path: Path) -> dict:
         raise ActionLookupError(f"{path}: invalid JSON: {exc}") from exc
 
 
-def resolve_profile_actions(profile_id: str, profiles_dict: dict, seen: set[str] | None = None) -> list[str]:
+def _resolve(profile_id: str, profiles_dict: dict, seen: set[str] | None = None):
     if seen is None:
         seen = set()
     if profile_id in seen:
@@ -91,19 +91,24 @@ def resolve_profile_actions(profile_id: str, profiles_dict: dict, seen: set[str]
 
     data = profiles_dict[profile_id]
     actions = []
+    denied = set(data.get("denied", []))
     parent_id = data.get("extends")
     if parent_id:
-        actions.extend(resolve_profile_actions(parent_id, profiles_dict, seen))
+        parent_actions, parent_denied = _resolve(parent_id, profiles_dict, seen)
+        actions.extend(parent_actions)
+        denied |= parent_denied
 
     for act in data.get("actions", []):
         if act not in actions:
             actions.append(act)
 
-    denied = set(data.get("denied", []))
-    if denied:
-        actions = [act for act in actions if act not in denied]
+    return actions, denied
 
-    return actions
+
+def resolve_profile_actions(profile_id: str, profiles_dict: dict, seen: set[str] | None = None) -> list[str]:
+    """Resolve a profile; `denied` entries apply to the whole inheritance chain."""
+    actions, denied = _resolve(profile_id, profiles_dict, seen)
+    return [act for act in actions if act not in denied]
 
 
 def validate_all(catalog: dict[str, dict], profiles_data: dict) -> list[str]:

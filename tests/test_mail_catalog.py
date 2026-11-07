@@ -53,6 +53,34 @@ class MailCatalogTests(unittest.TestCase):
         self.assertTrue(FORBIDDEN.isdisjoint(employee))
         self.assertLessEqual(max(counts.values()), 300)
 
+    def test_denied_applies_through_inheritance(self):
+        profiles = {
+            "a": {"actions": ["x", "y"], "denied": ["z"]},
+            "b": {"extends": "a", "actions": ["z", "w"]},
+        }
+        self.assertEqual(lookup_actions.resolve_profile_actions("b", profiles), ["x", "y", "w"])
+
+    def test_paginate_survives_server_side_page_cap(self):
+        pages = [[{"id": i} for i in range(25)], [{"id": i} for i in range(25, 40)], []]
+        calls = []
+
+        def fake_call(tool, args, timeout=30):
+            calls.append(args["query_params"]["start"])
+            return {"data": {"messages": pages[len(calls) - 1]}}
+
+        original = mail_client.call
+        mail_client.call = fake_call
+        try:
+            result = mail_client.paginate("list mails", page_size=50, max_records=100)
+        finally:
+            mail_client.call = original
+        self.assertEqual(len(result["data"]), 40)
+        self.assertEqual(calls, [1, 26, 41])
+
+    def test_accounts_primary_account_shape(self):
+        result = {"data": {"data": {"primaryAccount": {"accountId": "1", "emailAddress": "a@b.c"}}}}
+        self.assertEqual(mail_client.rows(result)[0]["accountId"], "1")
+
     def test_search_and_runtime_name(self):
         result = subprocess.run(
             [sys.executable, str(LOOKUP), "--search", "attachment", "--names-only"],

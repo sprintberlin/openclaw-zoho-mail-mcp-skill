@@ -6,13 +6,13 @@ from pathlib import Path
 _SCRIPTS_DIR = Path(__file__).resolve().parent
 if str(_SCRIPTS_DIR) not in sys.path:
     sys.path.insert(0, str(_SCRIPTS_DIR))
-from mail_client import ENDPOINT, build_base_parser, call, finish, paginate
+from mail_client import ENDPOINT, build_base_parser, call, finish, paginate, positive_int
 COLUMNS = [("ID", ["messageId", "message_id", "id"]), ("From", ["fromAddress", "from", "sender"]), ("Subject", ["subject"]), ("Date", ["receivedTime", "sentDateInGMT", "date"])]
 def build_parser():
     parser = build_base_parser("List Zoho Mail mails.")
     parser.add_argument("--account-id", default="me")
     parser.add_argument("--folder-id", help="folder ID (optional)")
-    parser.add_argument("--limit", type=int, default=20)
+    parser.add_argument("--limit", type=positive_int, default=20)
     return parser
 def main(argv=None):
     args = build_parser().parse_args(argv)

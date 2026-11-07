@@ -89,9 +89,9 @@ def paginate(tool, path_variables=None, params=None, page_size=20, max_records=N
         result = call(tool, {"path_variables": dict(path_variables or {}), "query_params": query}, timeout=timeout)
         if "error" in result: return result
         page = rows(result); collected.extend(page)
-        if not page or len(page) < request_limit: break
+        if not page: break  # a short page can be a server-side cap, only an empty page ends the loop
         offset += len(page)
-    return {"data": collected[:max_records] if max_records else collected, "info": {"count": len(collected)}}
+    return {"data": collected[:max_records] if max_records is not None else collected, "info": {"count": len(collected)}}
 
 def print_table(records, columns, empty="No records found."):
     if not records: print(empty); return

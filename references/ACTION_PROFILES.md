@@ -22,7 +22,7 @@ A Zoho MCP server accepts at most 300 selected Actions. Zoho Mail exposes 397, s
 
 ## Deliberately excluded
 
-Permanent deletion (`clear mails from trash`, `empty folder`, `clear folder from trash`, `delete account`), mail forwarding rules, Domain, User, Group, Policy, Org Management, Audit Logs, Shared Mailbox, Streams, Tasks, Hotkeys, Permalink. Add per task only with explicit need and the matching Zoho role. Admin Actions work only for users with admin rights in the Zoho Mail organization.
+Permanent deletion (`clear mails from trash`, `empty folder`, `clear folder from trash`, `delete account`), mail forwarding rules, Domain, User, Group, Policy, Org Management, Audit Logs, Shared Mailbox, Streams, Tasks, Hotkeys, and creating, updating or deleting permalinks (only `get mail permalink` is in `mail-reader`). Add per task only with explicit need and the matching Zoho role. Admin Actions work only for users with admin rights in the Zoho Mail organization.
 
 ## Task recipes
 
